@@ -398,11 +398,11 @@
       ],
       "CLOCKWISE_ROTATION_STANDARD_CONTROLS": [
         "顺时针旋转",
-        "将图像角度增加 90 度"
+        "将当前矩形或椭圆顺时针旋转 90 度；没有选中对象时旋转图像"
       ],
       "ANTICLOCKWISE_ROTATION_STANDARD_CONTROLS": [
         "逆时针旋转",
-        "将图像角度减少 90 度"
+        "将当前矩形或椭圆逆时针旋转 90 度；没有选中对象时旋转图像"
       ],
       "SWITCH_DRAW_MODE_STANDARD_CONTROLS": [
         "绘制模式",

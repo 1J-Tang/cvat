@@ -90,26 +90,38 @@ function DrawShapePopoverComponent(props: Props): JSX.Element {
                     />
                 </Col>
             </Row>
-            {is2D && shapeType === ShapeType.RECTANGLE && (
+            {is2D && [ShapeType.RECTANGLE, ShapeType.ELLIPSE].includes(shapeType) && (
                 <>
                     <Row>
                         <Col>
                             <Text className='cvat-text-color'>{t('Drawing method')}</Text>
                         </Col>
                     </Row>
-                    <Row justify='space-around'>
-                        <Col>
+                    <Row className='cvat-draw-shape-popover-drawing-method'>
+                        <Col span={24}>
                             <Radio.Group
-                                style={{ display: 'flex' }}
+                                className='cvat-draw-shape-popover-drawing-method-selector'
                                 value={rectDrawingMethod}
                                 onChange={onChangeRectDrawingMethod}
                             >
-                                <Radio value={RectDrawingMethod.CLASSIC} style={{ width: 'auto' }}>
-                                    {t('By 2 Points')}
-                                </Radio>
-                                <Radio value={RectDrawingMethod.EXTREME_POINTS} style={{ width: 'auto' }}>
-                                    {t('By 4 Points')}
-                                </Radio>
+                                <Radio.Button value={RectDrawingMethod.CLASSIC}>
+                                    {t('2 Points')}
+                                </Radio.Button>
+                                {shapeType === ShapeType.RECTANGLE && (
+                                    <Radio.Button value={RectDrawingMethod.EXTREME_POINTS}>
+                                        {t('4 Points')}
+                                    </Radio.Button>
+                                )}
+                                <CVATTooltip title={t('Rotated shape drawing tooltip', {
+                                    count: shapeType === ShapeType.ELLIPSE ? 5 : 3,
+                                    shortcut: repeatShapeShortcut,
+                                })}>
+                                    <Radio.Button
+                                        value={RectDrawingMethod.ROTATED_POINTS}
+                                    >
+                                        {t('Rotated')}
+                                    </Radio.Button>
+                                </CVATTooltip>
                             </Radio.Group>
                         </Col>
                     </Row>

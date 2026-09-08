@@ -16,6 +16,7 @@ import Text from 'antd/lib/typography/Text';
 import { ColorBy } from 'reducers';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import LabelSelector from 'components/label-selector/label-selector';
+import type { OrientationAngle } from 'utils/change-object-orientation';
 import { ObjectType, ShapeType } from 'cvat-core-wrapper';
 import ItemMenu from './object-item-menu';
 import ColorPicker from './color-picker';
@@ -132,6 +133,7 @@ interface Props {
     propagate(): void;
     createURL(): void;
     switchOrientation(): void;
+    changeOrientation(degrees: OrientationAngle): void;
     toBackground(): void;
     toOneLayerBackward(): void;
     toForeground(): void;
@@ -177,6 +179,7 @@ function ItemTopComponent(props: Props): JSX.Element {
         propagate,
         createURL,
         switchOrientation,
+        changeOrientation,
         toBackground,
         toForeground,
         toOneLayerBackward,
@@ -265,6 +268,7 @@ function ItemTopComponent(props: Props): JSX.Element {
                         propagate,
                         createURL,
                         switchOrientation,
+                        changeOrientation,
                         toBackground,
                         toForeground,
                         toOneLayerBackward,

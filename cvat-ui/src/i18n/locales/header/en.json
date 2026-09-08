@@ -398,11 +398,11 @@
       ],
       "CLOCKWISE_ROTATION_STANDARD_CONTROLS": [
         "Rotate clockwise",
-        "Add 90 degrees to the image angle"
+        "Change active rectangle or ellipse orientation clockwise by 90°, or rotate the image if none is active"
       ],
       "ANTICLOCKWISE_ROTATION_STANDARD_CONTROLS": [
         "Rotate anticlockwise",
-        "Subtract 90 degrees from the image angle"
+        "Change active rectangle or ellipse orientation counterclockwise by 90°, or rotate the image if none is active"
       ],
       "SWITCH_DRAW_MODE_STANDARD_CONTROLS": [
         "Draw mode",

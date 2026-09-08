@@ -19,13 +19,14 @@ import Select from 'antd/lib/select';
 import Alert from 'antd/lib/alert';
 import Button from 'antd/lib/button';
 import message from 'antd/lib/message';
+import notification from 'antd/lib/notification';
 import { shallowEqual, ActionUnion, createAction } from 'utils/redux';
 
 import {
     ActiveControl, CombinedState, NavigationType,
 } from 'reducers';
 import { labelShapeType } from 'reducers/annotation-reducer';
-import { Canvas, CanvasMode } from 'cvat-canvas-wrapper';
+import { Canvas, CanvasMode, RectDrawingMethod } from 'cvat-canvas-wrapper';
 import {
     Job, Label, LabelType, ObjectType, ShapeType,
 } from 'cvat-core-wrapper';
@@ -40,6 +41,7 @@ import { ShortcutScope } from 'utils/enums';
 import { registerComponentShortcutsWithAutoLocalePatch } from 'i18n';
 import { subKeyMap } from 'utils/component-subkeymap';
 import { finishDraw, finishDrawAvailable } from 'utils/drawing';
+import openCVWrapper from 'utils/opencv-wrapper/opencv-wrapper';
 
 enum ReducerActionType {
     SWITCH_AUTO_NEXT_FRAME = 'SWITCH_AUTO_NEXT_FRAME',
@@ -48,6 +50,7 @@ enum ReducerActionType {
     SET_ACTIVE_LABEL = 'SET_ACTIVE_LABEL',
     SET_POINTS_COUNT = 'SET_POINTS_COUNT',
     SET_NEXT_FRAME = 'SET_NEXT_FRAME',
+    SET_ROTATED_SHAPE_DRAWING = 'SET_ROTATED_SHAPE_DRAWING',
 }
 
 function cancelCurrentCanvasOp(state: CombinedState): void {
@@ -106,6 +109,9 @@ export const actionCreators = {
     setPointsCount: (pointsCount: number) => (
         createAction(ReducerActionType.SET_POINTS_COUNT, { pointsCount })
     ),
+    setRotatedShapeDrawing: (enabled: boolean) => (
+        createAction(ReducerActionType.SET_ROTATED_SHAPE_DRAWING, { enabled })
+    ),
 };
 
 interface State {
@@ -117,6 +123,7 @@ interface State {
     labels: Label[];
     label: Label | null;
     labelType: Exclude<LabelType, LabelType.TAG | LabelType.SKELETON>;
+    rotatedShapeDrawing: boolean;
     initialNavigationType: NavigationType;
 }
 
@@ -176,6 +183,13 @@ const reducer = (state: State, action: ActionUnion<typeof actionCreators>): Stat
         };
     }
 
+    if (action.type === ReducerActionType.SET_ROTATED_SHAPE_DRAWING) {
+        return {
+            ...state,
+            rotatedShapeDrawing: action.payload.enabled,
+        };
+    }
+
     return state;
 };
 
@@ -221,6 +235,7 @@ function SingleShapeSidebar(): JSX.Element {
         keyMap,
         defaultLabel,
         defaultPointsCount,
+        defaultRotated,
         navigationType,
         annotations,
         activatedStateID,
@@ -235,6 +250,7 @@ function SingleShapeSidebar(): JSX.Element {
         keyMap: _state.shortcuts.keyMap,
         defaultLabel: _state.annotation.job.queryParameters.defaultLabel,
         defaultPointsCount: _state.annotation.job.queryParameters.defaultPointsCount,
+        defaultRotated: _state.annotation.job.queryParameters.defaultRotated,
         navigationType: _state.annotation.player.navigationType,
         annotations: _state.annotation.annotations.states,
         activatedStateID: _state.annotation.annotations.activatedStateID,
@@ -252,15 +268,20 @@ function SingleShapeSidebar(): JSX.Element {
         labels: jobInstance.labels.filter((label) => label.type !== LabelType.TAG && label.type !== LabelType.SKELETON),
         label: null,
         labelType: LabelType.ANY,
+        rotatedShapeDrawing: false,
         initialNavigationType: navigationType,
     });
 
     const unmountedRef = useRef(false);
     const savingRef = useRef(false);
+    const defaultRotatedAppliedRef = useRef(false);
     const canvasInitializerRef = useRef<() => void | null>(() => {});
     canvasInitializerRef.current = (): void => {
         const canvas = store.getState().annotation.canvas.instance as Canvas;
         if (isCanvasReady && canvas.mode() !== CanvasMode.DRAW && state.label && state.labelType !== LabelType.ANY) {
+            const rectDrawingMethod = state.rotatedShapeDrawing &&
+                [LabelType.RECTANGLE, LabelType.ELLIPSE].includes(state.labelType) ?
+                RectDrawingMethod.ROTATED_POINTS : undefined;
             appDispatch(updateActiveControl(
                 ShapeTypeToControl[state.labelType],
             ));
@@ -270,6 +291,7 @@ function SingleShapeSidebar(): JSX.Element {
                 activeObjectType: ObjectType.SHAPE,
                 activeLabelID: state.label.id,
                 activeShapeType: labelShapeType(state.labelType),
+                activeRectDrawingMethod: rectDrawingMethod,
             }));
 
             canvas.draw({
@@ -277,6 +299,9 @@ function SingleShapeSidebar(): JSX.Element {
                 crosshair: true,
                 shapeType: state.labelType,
                 numberOfPoints: state.pointsCountIsPredefined ? state.pointsCount : undefined,
+                rectDrawingMethod,
+                rotatedShapeFitter: rectDrawingMethod === RectDrawingMethod.ROTATED_POINTS ?
+                    openCVWrapper.contours : undefined,
             });
         }
     };
@@ -299,6 +324,32 @@ function SingleShapeSidebar(): JSX.Element {
         });
         // implicitly depends on annotations because may use notEmpty filter
     }, [jobInstance, navigationType, frame, annotations]);
+
+    const setRotatedShapeDrawing = useCallback(async (enabled: boolean): Promise<void> => {
+        if (enabled && !openCVWrapper.isInitialized) {
+            const hide = message.loading('Initializing OpenCV for rotated shape drawing...', 0);
+            try {
+                await openCVWrapper.initialize(() => {});
+            } catch (error: unknown) {
+                notification.error({
+                    message: 'Could not initialize OpenCV',
+                    description: error instanceof Error ? error.message : String(error),
+                });
+                return;
+            } finally {
+                hide();
+            }
+        }
+
+        dispatch(actionCreators.setRotatedShapeDrawing(enabled));
+    }, []);
+
+    useEffect(() => {
+        if (defaultRotated && !defaultRotatedAppliedRef.current) {
+            defaultRotatedAppliedRef.current = true;
+            setRotatedShapeDrawing(true);
+        }
+    }, [defaultRotated, setRotatedShapeDrawing]);
 
     const finishOnThisFrame = useCallback((forceSave = false): void => {
         if (typeof state.nextFrame === 'number') {
@@ -395,7 +446,7 @@ function SingleShapeSidebar(): JSX.Element {
     }, [
         isCanvasReady, annotations,
         state.label, state.labelType,
-        state.pointsCount, state.pointsCountIsPredefined,
+        state.pointsCount, state.pointsCountIsPredefined, state.rotatedShapeDrawing,
     ]);
 
     const siderProps: SiderProps = {
@@ -445,6 +496,7 @@ function SingleShapeSidebar(): JSX.Element {
     }
 
     const isPolylabel = [LabelType.POINTS, LabelType.POLYGON, LabelType.POLYLINE].includes(state.labelType);
+    const supportsRotatedShapeDrawing = [LabelType.RECTANGLE, LabelType.ELLIPSE].includes(state.labelType);
     const withLabelsSelector = state.labels.length > 1;
     const withLabelTypeSelector = state.label && state.label.type === 'any';
 
@@ -606,6 +658,21 @@ function SingleShapeSidebar(): JSX.Element {
                         </Col>
                     </Row>
                 </>
+            )}
+            { supportsRotatedShapeDrawing && (
+                <Row className='cvat-single-shape-annotation-sidebar-rotated-shape-drawing-checkbox'>
+                    <Col>
+                        <Checkbox
+                            checked={state.rotatedShapeDrawing}
+                            onChange={async (event: CheckboxChangeEvent): Promise<void> => {
+                                (window.document.activeElement as HTMLInputElement)?.blur();
+                                await setRotatedShapeDrawing(event.target.checked);
+                            }}
+                        >
+                            Draw a rotated shape
+                        </Checkbox>
+                    </Col>
+                </Row>
             )}
             <Row className='cvat-single-shape-annotation-sidebar-auto-next-frame-checkbox'>
                 <Col>
