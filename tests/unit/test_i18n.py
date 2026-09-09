@@ -7,7 +7,6 @@ import re
 import unittest
 from pathlib import Path
 
-
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 I18N_ROOT = REPOSITORY_ROOT / "cvat-ui" / "src" / "i18n"
 LOCALES_ROOT = I18N_ROOT / "locales"
@@ -64,9 +63,7 @@ class I18nResourceTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.resources = {
-            namespace: {
-                language: load_resource(namespace, language) for language in LANGUAGES
-            }
+            namespace: {language: load_resource(namespace, language) for language in LANGUAGES}
             for namespace in NAMESPACES
         }
 
@@ -140,7 +137,9 @@ class I18nResourceTest(unittest.TestCase):
             with self.subTest(shortcut_id=shortcut_id):
                 for metadata in (english_shortcuts[shortcut_id], chinese_shortcuts[shortcut_id]):
                     self.assertEqual(2, len(metadata))
-                    self.assertTrue(all(isinstance(value, str) and value.strip() for value in metadata))
+                    self.assertTrue(
+                        all(isinstance(value, str) and value.strip() for value in metadata)
+                    )
 
 
 if __name__ == "__main__":
