@@ -18,7 +18,6 @@ require('./commands_annotations_actions');
 require('./commands_webhooks');
 require('@cypress/code-coverage/support');
 require('cypress-real-events/support');
-require('./force-english-locale');
 
 // Chrome: ResizeObserver loop limit exceeded
 // Firefox: ResizeObserver loop completed with undelivered notifications

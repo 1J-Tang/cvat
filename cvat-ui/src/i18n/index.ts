@@ -60,7 +60,9 @@ async function init(): Promise<void> {
             load: 'currentOnly',
             debug: process.env.NODE_ENV === 'development',
             detection: {
-                order: ['localStorage', 'navigator', 'htmlTag'],
+                // Keep the default language deterministic. A saved user choice still wins,
+                // while the document's default `lang="en"` provides the English fallback.
+                order: ['localStorage', 'htmlTag'],
                 caches: ['localStorage'],
                 convertDetectedLanguage: normalizeLocale,
             },

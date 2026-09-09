@@ -78,6 +78,13 @@ class I18nResourceTest(unittest.TestCase):
             with self.subTest(namespace=namespace):
                 self.assertIn(f"'{namespace}'", config_source)
 
+    def test_default_language_is_english_without_a_saved_choice(self):
+        config_source = (I18N_ROOT / "config.ts").read_text(encoding="utf-8")
+        index_source = (I18N_ROOT / "index.ts").read_text(encoding="utf-8")
+
+        self.assertIn("export const fallbackLng = 'en';", config_source)
+        self.assertIn("order: ['localStorage', 'htmlTag']", index_source)
+
     def test_english_and_chinese_resources_have_matching_keys(self):
         for namespace, resources in self.resources.items():
             with self.subTest(namespace=namespace):
