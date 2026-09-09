@@ -16,6 +16,7 @@ require('./commands_annotations_actions');
 require('./commands_webhooks');
 require('@cypress/code-coverage/support');
 require('cypress-real-events/support');
+require('./force-english-locale');
 
 const resizeObserverLoopErr = 'ResizeObserver loop';
 Cypress.on('uncaught:exception', (err) => {
