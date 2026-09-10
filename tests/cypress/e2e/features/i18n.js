@@ -77,16 +77,19 @@ function loginThroughAPI() {
         username: Cypress.env('user'),
         password: Cypress.env('password'),
     }).its('status').should('equal', 200);
+    cy.intercept('GET', '/api/organizations*').as('getOrganizations');
     cy.visit('/tasks', {
         onBeforeLoad(window) {
             window.localStorage.setItem(localeStorageKey, 'en');
         },
     });
     cy.url().should('include', '/tasks');
+    cy.wait('@getOrganizations');
 }
 
 function switchLocale(option, modalTitle) {
-    cy.get('.cvat-switch-i18n-locale-button').should('be.visible').click();
+    cy.get('.cvat-switch-i18n-locale-button').should('be.visible');
+    cy.get('.cvat-switch-i18n-locale-button').click();
     cy.contains('.ant-modal-title', modalTitle).should('be.visible');
     cy.get('.ant-modal-content:visible .ant-select').click();
     cy.contains('.ant-select-item-option-content', option).should('be.visible').click();
