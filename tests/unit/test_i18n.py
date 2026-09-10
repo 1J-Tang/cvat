@@ -92,6 +92,19 @@ class I18nResourceTest(unittest.TestCase):
                 chinese_keys = sorted(flatten_leaves(resources["zh-CN"]))
                 self.assertEqual(english_keys, chinese_keys)
 
+    def test_english_locale_preserves_existing_ui_text(self):
+        expected_values = {
+            ("auth", "loginForm.New user?"): "New user?",
+            ("base", "First name"): "First name",
+            ("base", "sort.Sort by"): "Sort by",
+            ("base", "filter.Quick filters"): "Quick filters",
+        }
+
+        for (namespace, key), expected_value in expected_values.items():
+            with self.subTest(namespace=namespace, key=key):
+                english = flatten_leaves(self.resources[namespace]["en"])
+                self.assertEqual(expected_value, english[key])
+
     def test_all_translation_values_are_non_empty_strings(self):
         for namespace, resources in self.resources.items():
             for language, resource in resources.items():

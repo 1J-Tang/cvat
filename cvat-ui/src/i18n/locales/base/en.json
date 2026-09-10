@@ -24,7 +24,7 @@
     "About": "About",
     "OK": "OK",
     "Password": "Password",
-    "First name": "First Name",
+    "First name": "First name",
     "Last name": "Last name",
     "Email": "Email",
     "Username": "Username",
@@ -54,7 +54,7 @@
         "validatePhoneNumber": "Input phone number is not correct"
     },
     "sort": {
-        "Sort by": "Sort By",
+        "Sort by": "Sort by",
         "Descending sort": "Descending sort",
         "Ascending sort": "Ascending sort"
     },
@@ -110,7 +110,7 @@
     },
     "filter": {
         "Clear filters": "Clear filters",
-        "Quick filters": "Quick filter",
+        "Quick filters": "Quick filters",
         "quick-filters-keys": {
             "Assigned to me": "Assigned to me",
             "Owned by me": "Owned by me",

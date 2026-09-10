@@ -1609,5 +1609,9 @@
   "Duplicate interval": "Duplicate interval",
   "Delete interval": "Delete interval",
   "Fit interval": "Fit interval",
-  "Loop interval playback{{state}} {{shortcut}}": "Loop interval playback{{state}} {{shortcut}}"
+  "Loop interval playback{{state}} {{shortcut}}": "Loop interval playback{{state}} {{shortcut}}",
+  "Micro calculates one score from all annotations.": "Micro calculates one score from all annotations.",
+  "Macro mean averages the scores of active labels.": "Macro mean averages the scores of active labels.",
+  "Worst label uses the lowest active-label score.": "Worst label uses the lowest active-label score.",
+  "View metric formulas in the documentation": "View metric formulas in the documentation"
 }

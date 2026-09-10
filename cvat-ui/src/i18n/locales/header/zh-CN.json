@@ -108,7 +108,7 @@
         "AUDIO_WORKSPACE_CONTROLS": "音频工作区工具"
       },
       "search-placeholder": "在这里查快捷键...",
-      "warning": "快捷键可由任意修饰键（Alt、Ctrl 或 Shift）和一个普通按键组合。部分组合可能被浏览器占用，无法在 CVAT 中覆盖",
+      "warning": "快捷键可由任意修饰键（Alt、Ctrl、Command 或 Shift）和一个普通按键组合。部分组合可能被浏览器占用，无法在 CVAT 中覆盖",
       "Conflicting shortcuts detected": "检测到快捷键冲突",
       "Added sequence conflicts with the following shortcuts:": "新增组合与以下快捷键冲突：",
       "in the scope": "所在范围",

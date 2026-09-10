@@ -108,7 +108,7 @@
         "AUDIO_WORKSPACE_CONTROLS": "Audio workspace controls"
       },
       "search-placeholder": "Search for a shortcut here...",
-      "warning": "Shortcut may consist of any combination of modifiers (alt, ctrl, or shift) and one non-modifier at the end. Some key combinations may be reserved by the browser and cannot be overridden in CVAT.",
+      "warning": "Shortcut may consist of any combination of modifiers (alt, ctrl, command, or shift) and one non-modifier at the end. Some key combinations may be reserved by the browser and cannot be overridden in CVAT.",
       "Conflicting shortcuts detected": "Conflicting shortcuts detected",
       "Added sequence conflicts with the following shortcuts:": "Added sequence conflicts with the following shortcuts:",
       "in the scope": "in the scope",

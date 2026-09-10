@@ -1609,5 +1609,9 @@
   "Duplicate interval": "复制区间",
   "Delete interval": "删除区间",
   "Fit interval": "适配区间",
-  "Loop interval playback{{state}} {{shortcut}}": "循环播放区间{{state}} {{shortcut}}"
+  "Loop interval playback{{state}} {{shortcut}}": "循环播放区间{{state}} {{shortcut}}",
+  "Micro calculates one score from all annotations.": "微平均根据所有标注计算一个总分。",
+  "Macro mean averages the scores of active labels.": "宏平均计算所有启用标签得分的平均值。",
+  "Worst label uses the lowest active-label score.": "最差标签采用启用标签中的最低得分。",
+  "View metric formulas in the documentation": "在文档中查看指标计算公式"
 }
