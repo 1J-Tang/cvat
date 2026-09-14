@@ -84,6 +84,15 @@ function ChangeColorItem({
     );
 }
 
+function FitIntervalItem({ onFitInterval }: Pick<Props, 'onFitInterval'>): JSX.Element {
+    const { t } = useTranslation('business');
+    return (
+        <Button type='link' icon={<ArrowsAltOutlined />} onClick={onFitInterval}>
+            {t('Fit interval')}
+        </Button>
+    );
+}
+
 enum MenuKeys {
     FIT_INTERVAL = 'fit_interval',
     CREATE_URL = 'create_url',
@@ -94,18 +103,13 @@ enum MenuKeys {
 
 export default function AudioRegionItemMenu(props: Props): MenuProps {
     const { locked, colorBy } = props;
-    const { t } = useTranslation('business');
 
     const items: NonNullable<MenuProps['items']> = [];
 
     items.push(
         {
             key: MenuKeys.FIT_INTERVAL,
-            label: (
-                <Button type='link' icon={<ArrowsAltOutlined />} onClick={props.onFitInterval}>
-                    {t('Fit interval')}
-                </Button>
-            ),
+            label: <FitIntervalItem onFitInterval={props.onFitInterval} />,
         },
         { type: 'divider' },
         {

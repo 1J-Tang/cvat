@@ -103,7 +103,7 @@ function ColorPicker(props: Props, ref: React.Ref<any>): JSX.Element {
                                     changeVisible(false);
                                 }}
                             >
-                                {t('OK')}
+                                {t('Ok')}
                             </Button>
                         </Col>
                     </Row>

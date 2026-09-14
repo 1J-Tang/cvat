@@ -441,8 +441,8 @@
         "Cancel any active canvas mode"
       ],
       "SWITCH_AUTOMATIC_BORDERING": [
-        "Switch automatic bordering",
-        "Switch automatic bordering for polygons and polylines during drawing or editing"
+        "Toggle snap to contour",
+        "Toggle automatic snap to contour for polygons and polylines during drawing/editing"
       ],
       "ACTIVATE_BRUSH_TOOL_STANDARD_CONTROLS": [
         "Brush tool",

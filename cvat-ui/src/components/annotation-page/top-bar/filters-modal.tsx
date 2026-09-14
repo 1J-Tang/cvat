@@ -229,13 +229,13 @@ function FiltersModalComponent(): JSX.Element {
                     fieldSettings: { min: 0 },
                 },
                 objectID: {
-                    label: t('Object ID'),
+                    label: t('ObjectID'),
                     type: 'number',
                     hideForCompare: true,
                     fieldSettings: { min: 0 },
                 },
                 serverID: {
-                    label: t('Server ID'),
+                    label: t('ServerID'),
                     type: 'number',
                     hideForCompare: true,
                     fieldSettings: { min: 0 },

@@ -96,14 +96,57 @@ class I18nResourceTest(unittest.TestCase):
         expected_values = {
             ("auth", "loginForm.New user?"): "New user?",
             ("base", "First name"): "First name",
+            ("base", "Cloud storages"): "Cloud Storages",
             ("base", "sort.Sort by"): "Sort by",
             ("base", "filter.Quick filters"): "Quick filters",
+            ("business", "Ok"): "Ok",
+            ("business", "false"): "false",
+            ("business", "true"): "true",
+            ("business", "ObjectID"): "ObjectID",
+            ("business", "ServerID"): "ServerID",
+            ("business", "jobs"): "jobs",
+            ("business", "tasks"): "tasks",
+            ("business", "projects"): "projects",
+            (
+                "business",
+                "Are you sure you want to remove the hook?",
+            ): "Are you sure you want to remove the hook?",
+            (
+                "business",
+                "Annotations have been loaded to the [{{instanceType}} #{{id}}]({{url}})",
+            ): "Annotations have been loaded to the [{{instanceType}} #{{id}}]({{url}})",
+            (
+                "business",
+                "Dataset was imported to the [{{instanceType}} #{{id}}]({{url}})",
+            ): "Dataset was imported to the [{{instanceType}} #{{id}}]({{url}})",
+            (
+                "business",
+                "The {{instanceType}} has been restored successfully. Click [here]({{url}}) to open",
+            ): "The {{instanceType}} has been restored successfully. Click [here]({{url}}) to open",
         }
 
         for (namespace, key), expected_value in expected_values.items():
             with self.subTest(namespace=namespace, key=key):
                 english = flatten_leaves(self.resources[namespace]["en"])
                 self.assertEqual(expected_value, english[key])
+
+        english_shortcuts = self.resources["header"]["en"]["settings"]["Shortcuts"]
+        self.assertEqual(
+            [
+                "Toggle snap to contour",
+                "Toggle automatic snap to contour for polygons and polylines during drawing/editing",
+            ],
+            english_shortcuts["SWITCH_AUTOMATIC_BORDERING"],
+        )
+
+    def test_audio_menu_factory_does_not_call_react_hooks(self):
+        menu_source = (
+            REPOSITORY_ROOT
+            / "cvat-ui/src/audio/components/annotation-page/audio-workspace/audio-region-item-menu.tsx"
+        ).read_text(encoding="utf-8")
+        menu_factory = menu_source.split("export default function AudioRegionItemMenu", maxsplit=1)[1]
+
+        self.assertNotIn("useTranslation(", menu_factory)
 
     def test_all_translation_values_are_non_empty_strings(self):
         for namespace, resources in self.resources.items():

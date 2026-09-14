@@ -311,7 +311,7 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
                     <Text strong>
                         {t('Export {{count}} {{type}} as datasets', {
                             count: selectedInstances.length,
-                            type: t(instanceType),
+                            type: t(`${instanceType}s`),
                         })}
                     </Text>
                 ) : (

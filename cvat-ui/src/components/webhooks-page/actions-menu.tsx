@@ -78,7 +78,7 @@ export default function WebhookActionsMenu(props: Readonly<WebhookActionsMenuPro
                 });
             } : () => {
                 Modal.confirm({
-                    title: t('Are you sure you want to remove the webhook?'),
+                    title: t('Are you sure you want to remove the hook?'),
                     content: t('It will stop notifying the specified URL about listed events'),
                     className: 'cvat-modal-confirm-remove-webhook',
                     onOk: onDelete,

@@ -239,7 +239,7 @@ function ExportBackupModal(): JSX.Element {
                     <Text strong>
                         {t('Export {{count}} {{type}} backups', {
                             count: selectedInstances.length,
-                            type: t(instanceType),
+                            type: t(`${instanceType}s`),
                         })}
                     </Text>
                 ) : (

@@ -687,8 +687,6 @@ export default function (state = defaultState, action: AnyAction): Notifications
         case ImportActionTypes.IMPORT_DATASET_SUCCESS: {
             const { instance, resource } = action.payload;
             const instanceType = getInstanceType(instance);
-            const translatedResource = i18n.t(resource, { ns: 'business' });
-            const translatedInstanceType = i18n.t(instanceType, { ns: 'business' });
             let url = '';
             if (instanceType === 'project') {
                 url = `/projects/${instance.id}`;
@@ -698,11 +696,15 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 url = `/tasks/${instance.taskId}/jobs/${instance.id}`;
             }
             const description = i18n.t(
-                '{{resource}} has been imported to [{{instanceType}} #{{id}}]({{url}})',
+                resource === 'annotation' ?
+                    'Annotations have been loaded to the [{{instanceType}} #{{id}}]({{url}})' :
+                    'Dataset was imported to the [{{instanceType}} #{{id}}]({{url}})',
                 {
                     ns: 'business',
-                    resource: translatedResource,
-                    instanceType: translatedInstanceType,
+                    instanceType: i18n.t(
+                        `${instanceType.charAt(0).toUpperCase()}${instanceType.slice(1)}`,
+                        { ns: 'business' },
+                    ),
                     id: instance.id,
                     url,
                 },
@@ -757,7 +759,7 @@ export default function (state = defaultState, action: AnyAction): Notifications
         case ImportActionTypes.IMPORT_BACKUP_SUCCESS: {
             const { instanceId, instanceType } = action.payload;
             const description = i18n.t(
-                '{{instanceType}} has been restored successfully. Click [here]({{url}}) to open it.',
+                'The {{instanceType}} has been restored successfully. Click [here]({{url}}) to open',
                 {
                     ns: 'business',
                     instanceType: i18n.t(instanceType, { ns: 'business' }),
