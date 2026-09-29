@@ -144,7 +144,9 @@ class I18nResourceTest(unittest.TestCase):
             REPOSITORY_ROOT
             / "cvat-ui/src/audio/components/annotation-page/audio-workspace/audio-region-item-menu.tsx"
         ).read_text(encoding="utf-8")
-        menu_factory = menu_source.split("export default function AudioRegionItemMenu", maxsplit=1)[1]
+        menu_factory = menu_source.split("export default function AudioRegionItemMenu", maxsplit=1)[
+            1
+        ]
 
         self.assertNotIn("useTranslation(", menu_factory)
 
