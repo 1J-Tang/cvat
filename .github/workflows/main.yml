@@ -506,7 +506,18 @@ jobs:
       - name: Update Helm chart dependencies
         working-directory: helm-chart
         run: |
-          helm dependency update
+          for attempt in 1 2 3; do
+            if helm dependency update; then
+              break
+            fi
+
+            if [ "$attempt" = 3 ]; then
+              exit 1
+            fi
+
+            echo "Helm dependency update failed, retrying in 10 seconds..."
+            sleep 10
+          done
 
       - name: Deploy to minikube
         run: |
